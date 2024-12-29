@@ -17,37 +17,19 @@ const elementIDs = {
  */
 export const App = (elementId) => {
 
-    // Function to render todos and update the pending count
     const displayTodos = () => {
         const todos = todoStore.getTodos(todoStore.getCurrentFilter());
         renderTodos(elementIDs.TodoList, todos);
         updatePendingcount();
     };
 
-    // Function to update the pending count
+/**
+ * This function updates the pending co
+ */
     const updatePendingcount = () => {
         renderPendingTodos(elementIDs.PendingCounter);
     };
 
-    // Function to handle filter changes
-    const handleFilterChange = (event) => {
-        filtersLIs.forEach(el => el.classList.remove('selected')); 
-        event.target.classList.add('selected');
-
-        const filterMap = {
-            'Todos': Filters.All,
-            'Completados': Filters.Completed,
-            'Pendientes': Filters.Pending,
-        };
-
-        const filter = filterMap[event.target.textContent];
-        if (filter) {
-            todoStore.setFilter(filter);
-            displayTodos();
-        }
-    };
-
-    // Initial setup
     (() => {
         const app = document.createElement('div');
         app.innerHTML = html;
@@ -61,7 +43,7 @@ export const App = (elementId) => {
     const deleteCompletedBtn = document.querySelector(elementIDs.ClearCompleted);
     const filtersLIs = document.querySelectorAll(elementIDs.TodoFilters);
 
-    // Listeners for adding todos
+    // Listeners
     newDescriptionInput.addEventListener('keyup', (event) => {
         if (event.keyCode !== 13) return;
         if (event.target.value.trim().length === 0) return;
@@ -71,7 +53,6 @@ export const App = (elementId) => {
         event.target.value = '';
     });
 
-    // Listeners for toggling and deleting todos
     todoListUl.addEventListener('click', (event) => {
         const element = event.target.closest('[data-id]');
         if (element) {
@@ -84,14 +65,30 @@ export const App = (elementId) => {
         }
     });
 
-    // Listener for clearing completed todos
-    deleteCompletedB.addEventListener('click', () => {
+    deleteCompletedBtn.addEventListener('click', () => {
         todoStore.deleteCompleted();
         displayTodos();
-    });
+    })
 
-    // Listeners for filters
+
     filtersLIs.forEach(element => {
-        element.addEventListener('click', handleFilterChange);
-    });
+        element.addEventListener('click', (element) =>{
+            filtersLIs.forEach(el => el.classList.remove('selected')); 
+            element.target.classList.add('selected');
+
+            switch(element.target.text){
+                case 'Todos':
+                    todoStore.setFilter(Filters.All)
+                    break;
+                case 'Completados':
+                    todoStore.setFilter(Filters.Completed)
+                    break;
+                case 'Pendientes':
+                    todoStore.setFilter(Filters.Pending)
+                    break;
+                    
+            }
+            displayTodos();
+        })
+    })
 };
