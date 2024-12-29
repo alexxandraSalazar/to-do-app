@@ -5,6 +5,7 @@ The app allows you to:
 - Delete tasks
 - Mark tasks as completed
 - Filter tasks
+
 For this lab, I am focusing solely on the functionality, as I am using pre-designed templates.
 
 ## Tech Stack
